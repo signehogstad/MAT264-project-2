@@ -1,0 +1,45 @@
+clear;
+clc;
+hold off;
+
+f = @(x) pi*pi*sin(pi*x);
+u_eksakt = @(x) sin(pi*x);
+
+X = 2;
+N = 50;
+x_val = linspace(0,X,N);
+dx = x_val(2)-x_val(1);
+
+A = -1;
+B = 2;
+
+A = diag(A*ones(1,N-3),1) + diag(B*ones(1,N-2)) + diag(A*ones(1,N-3),-1);
+
+b = zeros(N,1);
+X = zeros(N,1);
+
+for i = 1:N
+    b(i) = dx^2 * f(x_val(i));
+end
+
+b(1) = 0;
+b(N) = 0;
+
+u(2:N-1) = A\b(2:N-1); % Matrisen er kun gyldig for ikke-randpunktene
+u(1) = 0;
+u(N) = 0;
+
+% plot(x_val,u)
+% hold on
+% 
+% plot(x_val,u_eksakt(x_val))
+% hold on
+gradient_vector = grad_func(dx,u)
+
+plot(x_val(1:length(x_val)-1),gradient_vector)
+
+function grad = grad_func(dx,u)
+    for i = 1:length(u)-1      
+        grad(i) = (u(i+1)-u(i))/(dx);    
+    end
+end
