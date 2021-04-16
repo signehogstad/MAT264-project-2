@@ -86,5 +86,17 @@ end
 
 
 
+% Conservation integral
 
+cons_int = 0;
 
+for i = 2:N
+    
+    b_i1 = (q(i+1)-q(i))/dx;
+    
+    cons_int = cons_int + dx*((pi^4)/2 + b_i1^2) + ((pi^3)/4)*(sin(2*pi*x_ny(i)) - ...
+        sin(2*pi*x_ny(i+1))) + 2*pi*b_i1*(cos(pi*x_ny(i+1)) - cos(pi*x_ny(i)));
+    
+end
+
+cons_int
