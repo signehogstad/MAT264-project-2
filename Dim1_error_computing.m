@@ -1,5 +1,5 @@
-% clear;
-% clc;
+clear;
+clc;
 hold off;
 
 f = @(x) pi*pi*sin(pi*x);
