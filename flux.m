@@ -1,4 +1,4 @@
-function q = flux(u,dx,k)
+function q = flux(u,dx,k,X,N)
 % Calculating and plotting q
 % k = 1 is a kind constant. In heat transfer situations, higher k will mean
 % higher transport of heat or something.
@@ -9,7 +9,7 @@ end
 
 q(1) = q(2) + pi*cos(pi*dx*0.5)-pi;
 
-%NBNBNB JUKS
-q(N+1) = q(1);
+%NBNBNB IKKJE JUKS LENGRE ME E PRO YAY
+q(N+1) = q(N) + pi*(cos(pi*X)-cos(pi*(X + 0.5*dx)));
 
 end
