@@ -1,4 +1,4 @@
-function [x,xh,u,uh,dx] = create_stuff(X,N,f)
+function [x,xh,u,uh,dx] = create_x_xh_u_uh(X,N,f)
 % Matrix diagonal values
 a = -1;
 bb = 2;
