@@ -1,4 +1,4 @@
-function cons_int = energy_conservation_integral(q,xh,N)
+function cons_int = error_conservation_integral(q,xh,N)
 % Conservation integral
 
 cons_int = 0;
