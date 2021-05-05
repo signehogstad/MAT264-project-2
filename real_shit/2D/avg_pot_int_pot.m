@@ -9,9 +9,9 @@ end
 
 for i = 2:nx-1
     for j = 2:ny-1       
-        alt_int_pot = v_interpolation_value(i,j,avg_pot,X(1,:),Y(:,1),dx,dy);        
+        int_pot = v_interpolation_value(i,j,avg_pot,X(1,:),Y(:,1),dx,dy);        
         est_pot = U(i,j);
-        int_pot_mat(i-1,j-1) = alt_int_pot;
+        int_pot_mat(i-1,j-1) = int_pot;
     end
 end
 int_pot_mat = conv2(int_pot_mat,[0,0,0;0,1,0;0,0,0]);
