@@ -93,9 +93,6 @@ title('Interpolated potential yay')
 
 colorbar()
 
-% Ok, so, I think everything from this point and downwards are kinda ok.
-% Our main problem lays in the interpolated potential-calculation.
-
 int_val = 0;
 int_val_yeah = 0;
 real_error_noe = 0;
@@ -112,8 +109,8 @@ for i = 1:nx*ny
     x0 = coord_vals(1,1); x1 = coord_vals(1,2);
     y0 = coord_vals(2,1); y1 = coord_vals(2,2);
     
-    %IDK? Får for syk konvergens av dette. Men tror det blir feil å ikke ha
-    %det med, såååå idk...
+    %IDK? FÃ¥r for syk konvergens av dette. Men tror det blir feil Ã¥ ikke ha
+    %det med, sÃ¥Ã¥Ã¥Ã¥ idk...
     dy = y1-y0;
     dx = x1-x0;
 
@@ -128,15 +125,15 @@ for i = 1:nx*ny
     int_val = int_val + midpoint_integral_f(x0,x1,y0,y1,fi);
     
 
-    f_real_error_func = @(x,y)((2*pi*cos(2*pi*x)*sin(2*pi*y))^2+(2*pi*cos(2*pi*y)*sin(2*pi*x))^2-4*pi*cos(2*pi*x)*sin(2*pi*y)*(a2+a3*x)+(a1^2+2*a1*a3*y+a3^2*y^2)+(a2^2+2*a3*a2*x+a3^2*x^2))^2;
-    real_error_noe = real_error_noe + midpoint_integral_f(x0,x1,y0,y1,f_real_error_func);
+    % f_real_error_func = @(x,y)((2*pi*cos(2*pi*x)*sin(2*pi*y))^2+(2*pi*cos(2*pi*y)*sin(2*pi*x))^2-4*pi*cos(2*pi*x)*sin(2*pi*y)*(a2+a3*x)+(a1^2+2*a1*a3*y+a3^2*y^2)+(a2^2+2*a3*a2*x+a3^2*x^2))^2;
+    % real_error_noe = real_error_noe + midpoint_integral_f(x0,x1,y0,y1,f_real_error_func);
 
 
 
 
 end
 maj_int = sqrt(maj_int);
-real_error_noe = sqrt(real_error_noe);
+% real_error_noe = sqrt(real_error_noe);
 
 int_val = 1/(pi*sqrt(2))*sqrt(int_val)
 
