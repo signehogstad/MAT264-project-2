@@ -8,7 +8,7 @@ w = 6; n = 5; e = 4; s = 3;
 cell_info = cells(i,:);
 W = cell_info(w); N = cell_info(n); E = cell_info(e); S = cell_info(s);
 % Getting x0, y0, x1, y1 by fetching edges(s,:), edges(e,:) and so on.
-% Erlend har vært supernice and given us all these matriser. edges(s,:)
+% Erlend har vÃ¦rt supernice and given us all these matriser. edges(s,:)
 % will be information abouth the southern end of the cell. It will
 % contain a "center"-value as x-coordinate, and will be y0 as
 % y-coordinate.
