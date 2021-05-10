@@ -1,4 +1,4 @@
-function [coord_vals,flux_vals,maj_int,j,a_vec] = get_flux_and_coord(cells,edges,q,a_mat,i,f,j)
+function [coord_vals,flux_vals,j,a_vec] = get_flux_and_coord(cells,edges,q,a_mat,i,f,j)
 
 
 a_vec = zeros(4,1);
@@ -89,15 +89,7 @@ else
     
 end
 
-% rx0
-% rx1
-
 coord_vals = [x0 x1; y0 y1;];
 flux_vals = [rx0 rx1; ry0 ry1;];
-
-maj_int = energy_error_integral(x0,x1,y0,y1,rx0,rx1,ry0,ry1,a_vec);
-
-a1 = a_vec(2); a2 = a_vec(3); a3 = a_vec(4);
-
 
 end
