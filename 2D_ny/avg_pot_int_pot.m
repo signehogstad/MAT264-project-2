@@ -7,15 +7,14 @@ for i = 1:nx-1
     end
 end
 cell_number = 1;
-for i = 2:nx-1
-    for j = 2:ny-1       
+for j = 2:nx-1
+    for i = 2:ny-1       
         [int_pot,a] = v_interpolation_value(i,j,avg_pot,X(1,:),Y(:,1),dx,dy);        
         est_pot = U(i,j);
         int_pot_mat(i-1,j-1) = int_pot;
         int_pot;
         a_mat(cell_number,:) = a;
         cell_number = cell_number + 1;
-        a_mat;
     end
 end
 avg_pot;

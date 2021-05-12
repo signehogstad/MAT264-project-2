@@ -1,6 +1,14 @@
-function int_val = midpoint_integral_f(x0,x1,y0,y1,f)
-A = (x1-x0)*(y1-y0);
-x_avg = (x1+x0)/2;
-y_avg = (y1+y0)/2;
-int_val = f(x_avg,y_avg)*A;
+function f_int = midpoint_integral_f(x0,x1,y0,y1,f)
+nx = 15;
+ny = 15;
+hx = (x1-x0)/nx;
+hy = (y1-y0)/ny;
+f_int = 0;
+for i = 0:(nx-1)
+    for j = 0:(ny-1)
+        xi = x0 + hx/2 + i*hx;
+        yj = y0 + hy/2 + j*hy;
+        f_int = f_int + hx*hy*f(xi,yj);
+    end
+end
 end

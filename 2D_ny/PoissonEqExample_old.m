@@ -7,7 +7,6 @@ format short
 % k = @(x,y) 1+(x-1).*(y-1);
 k = @(x,y) ones(length(x),length(y));
 
-
 % Exact solution
 u_fabricated = @(x,y) sin(2*pi*x).*sin(2*pi*y);
 % u_fabricated = @(x,y) x.^2.*y.^2-x.^2.*y-x.*y.^2+x.*y;
@@ -18,8 +17,8 @@ f = @(x,y) 8*pi*pi*sin(2*pi*x).*sin(2*pi*y)-(2*pi*cos(2*x*pi).*sin(2*pi*y).*(y-1
 % fi =  @(x,y) (8*pi*pi*sin(2*pi*x).*sin(2*pi*y).*k(x,y)-(2*pi*cos(2*x*pi).*sin(2*pi*y).*(y-1)+2*pi*sin(2*pi*x).*cos(2*pi*y).*(x-1)))^2;
 
 %Determine number of cells in each direction
-nx = 20;
-ny = 20;
+nx = 40;
+ny = 40;
 dx = 1/(nx-1);
 dy = 1/(ny-1);
 
@@ -32,60 +31,31 @@ u = A\b;
 % Reshape and plot
 [X,Y] = meshgrid(0:dy:1,0:dx:1);
 U = reshape(u,nx,ny);
-figure(1)
-set(gcf,'Position',[100 100 1200 500])
-subplot(1,2,1);
-surf(X,Y,U)
-axis([0 1 0 1])
-
 
 % Calculate fabricated solution vector and compute error in "L2-norm"
 u_fabricated_vect = u_fabricated(cells(:,1),cells(:,2));
-error = norm(u-u_fabricated_vect,2)*sqrt(dx*dy)
-xlabel('x')
-ylabel('y')
-title('u')
-colorbar()
-
-
-% Compute the flux vector [F_1,F_2] at the cells and plot with quiver
-[F_1, F_2] = flux(G,K,u,cells,nx,ny);
-subplot(1,2,2)
-quiver(cells(:,1),cells(:,2),F_1,F_2)
-axis([0 1 0 1])
-xlabel('x')
-ylabel('y')
-title('Flux')
-
-% Plot the fabricated solution
-% U_fabricated = reshape(u_fabricated_vect,nx,ny);
-% figure(2)
-% subplot(1,1,1)
-% surf(X,Y,U_fabricated)
-% axis([0 1 0 1])
-% xlabel('x')
-% ylabel('y')
-% title('u_{fabricated}')
-% colorbar()
+error7 = norm(u-u_fabricated_vect,2)*sqrt(dx*dy)
 
 % Team Ingrid and Signe sitt verk herfra og nedover vvvvv
 
 q = -K.*G*u;
+u = reshape(u,nx,ny);
 
-[avg_pot,int_pot,a_mat] = avg_pot_int_pot(nx,ny,U,X,Y);
-
-u = reshape(int_pot,length(u),1);
-
-% Are we using Erlend's u, or the interpolated u?
-q1 = -K.*G*u;
+[avg_pot,U_int,a_mat] = avg_pot_int_pot(nx,ny,U,X,Y);
 
 
-cells;
-edges;
+error_L2 = 0;
+for i = 1:nx
+    for j = 1:ny
+        error_L2 = error_L2 + (U_int(i,j) - U(i,j))^2;
+    end
+end
+error = sqrt(dx*dy*error_L2)
+
 
 
 figure(2)
-surf(X,Y,int_pot)
+surf(X,Y,U_int)
 axis([0 1 0 1])
 xlabel('x')
 ylabel('y')
@@ -93,50 +63,58 @@ title('Interpolated potential yay')
 
 colorbar()
 
-int_val = 0;
-int_val_yeah = 0;
-real_error_noe = 0;
-maj_int = 0;
+conservation_integral = 0;
+real_e_e = 0;
+energy_error_int = 0;
+stjernenorm_midt = 0;
 j = 1;
+
 for i = 1:nx*ny
 
-    [coord_vals,flux_vals,j,a_vec] = get_flux_and_coord(cells,edges,q,a_mat,i,f,j);
-    
-    
+    [coord_vals,flux_vals,j,a_vec,maj_int] = get_flux_and_coord(cells,edges,q,a_mat,i,f,j);
+        
     a1 = a_vec(2); a2 = a_vec(3); a3 = a_vec(4);
-
+ 
+    energy_error_int = energy_error_int + maj_int;
     
-    x0 = coord_vals(1,1); x1 = coord_vals(1,2);
-    y0 = coord_vals(2,1); y1 = coord_vals(2,2);
+    xv = coord_vals(1,1); xe = coord_vals(1,2);
+    ys = coord_vals(2,1); yn = coord_vals(2,2);
     
-    %IDK? Får for syk konvergens av dette. Men tror det blir feil å ikke ha
-    %det med, såååå idk...
-    dy = y1-y0;
-    dx = x1-x0;
+    dy = yn-ys; dx = xe-xv;
 
-    rx0 = flux_vals(1,1); rx1 = flux_vals(1,2);
-    ry0 = flux_vals(2,1); ry1 = flux_vals(2,2);
+    rv = flux_vals(1,1); 
+    re = flux_vals(1,2);
+    rs = flux_vals(2,1); 
+    rn = flux_vals(2,2);
     
+    fi = @(x,y) (8*pi*pi*sin(2*pi*x).*sin(2*pi*y)-(2*pi*cos(2*x*pi).*sin(2*pi*y).*(y-1)+2*pi*sin(2*pi*x).*cos(2*pi*y).*(x-1)) - ((re-rv)/dx + (rn-rs)/dy)).^2;
+
+    conservation_integral = conservation_integral + midpoint_integral_f(xv,xe,ys,yn,fi);
+      
+    f_jevlig = @(x,y) (2*pi*cos(2*pi*x)*sin(2*pi*y))^2-4*pi*cos(2*pi*x)*sin(2*pi*y)*(a1+a3*y)+(a1+a3*y)^2 + ...
+        + (2*pi*cos(2*pi*y)*sin(2*pi*x))^2-4*pi*cos(2*pi*y)*sin(2*pi*x)*(a2 + a3*x) + (a2+a3*x)^2;
     
-    maj_int = maj_int + energy_error_integral(x0,x1,y0,y1,rx0,rx1,ry0,ry1,a_vec);
+    real_e_e = real_e_e + midpoint_integral_f(xv,xe,ys,yn,f_jevlig);
     
-    fi = @(x,y) (8*pi*pi*sin(2*pi*x).*sin(2*pi*y)-(2*pi*cos(2*x*pi).*sin(2*pi*y).*(y-1)+2*pi*sin(2*pi*x).*cos(2*pi*y).*(x-1)) - ((rx1-rx0)/dx + (ry1-ry0)/dy)).^2;
-
-    int_val = int_val + midpoint_integral_f(x0,x1,y0,y1,fi);
+    f_merjevlig = @(x,y) (2*pi*cos(2*pi*x)*sin(2*pi*y))^2+4*pi*cos(2*pi*x)*sin(2*pi*y)*((xe-x)*rv/dx+(re*(x-xv))/dx)+(((xe-x)*rv/dx+(re*(x-xv))/dx))^2 + ...
+        + (2*pi*cos(2*pi*y)*sin(2*pi*x))^2+4*pi*cos(2*pi*y)*sin(2*pi*x)*((yn-y)*rs/dy+(rn*(y-ys))/dy)+(((yn-y)*rs/dy+(rn*(y-ys))/dy))^2;
     
-
-    % f_real_error_func = @(x,y)((2*pi*cos(2*pi*x)*sin(2*pi*y))^2+(2*pi*cos(2*pi*y)*sin(2*pi*x))^2-4*pi*cos(2*pi*x)*sin(2*pi*y)*(a2+a3*x)+(a1^2+2*a1*a3*y+a3^2*y^2)+(a2^2+2*a3*a2*x+a3^2*x^2))^2;
-    % real_error_noe = real_error_noe + midpoint_integral_f(x0,x1,y0,y1,f_real_error_func);
-
-
-
-
+    stjernenorm_midt = stjernenorm_midt + midpoint_integral_f(xv,xe,ys,yn,f_merjevlig);
+    
 end
-maj_int = sqrt(maj_int);
-% real_error_noe = sqrt(real_error_noe);
+% energy_error_int = sqrt(energy_error_int);
+% 
+% conservation_integral = 1/(pi*sqrt(2))*sqrt(conservation_integral);
+% 
+% real_e_e = sqrt(real_e_e)
+% 
+% majorant = energy_error_int + conservation_integral
+% 
+% stjernenorm_midt = sqrt(stjernenorm_midt);
+% 
+% stjernenorm = real_e_e + conservation_integral + stjernenorm_midt
+% 
+% efficiency_index = 3*majorant/stjernenorm
 
-int_val = 1/(pi*sqrt(2))*sqrt(int_val)
 
-majorant = maj_int + int_val
 
-colormap winter

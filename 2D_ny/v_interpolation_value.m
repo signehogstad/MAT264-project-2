@@ -3,21 +3,6 @@ function [int_pot,a] = v_interpolation_value(i,j,avg_pot,x,y,dx,dy)
 x1 = x(i)-dx/2; x2 = x(i+1)-dx/2; y1 = y(j)-dy/2; y2 = y(j+1)-dy/2;
 A = [1 x1 y1 x1*y1; 1 x1 y2 x1*y2; 1 x2 y1 x2*y1; 1 x2 y2 x2*y2];
 
-
-
-% figure(3)
-% plot(x1,y1,'*')
-% hold on
-% 
-% plot(x2,y2,'o')
-% hold on
-% 
-% plot(x2,y1,'o')
-% hold on
-% 
-% plot(x1,y2,'*')
-% hold on
-
 axis([0 1 0 1])
 
 Q11 = avg_pot(i-1,j-1);
