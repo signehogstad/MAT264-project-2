@@ -1,6 +1,6 @@
 function vectn = make_longer(vect,targvect)
 % This function takes in two vectors. One vect, which is short, and another
-% one, targvect, which is an integer (n) number of times longer than vect 
+% one, targvect (target vector), which is an integer (n) number of times longer than vect 
 % #goodinglish.
 % It returns the vector vectn, which is a "longification" of vect, such as
 % the length of vectn and targvect is the same. vectn is kind of equal to
@@ -10,7 +10,7 @@ vectn = [];
 j = 0;
 n = length(targvect)/length(vect);
 while length(vectn) < length(targvect)
-    for i = (1 + j*n):(1 + n*j + n)
+    for i = (1 + j*n):(1 + j*n + n)
         vectn(i) = vect(j + 1);
     end
     j = j + 1;
